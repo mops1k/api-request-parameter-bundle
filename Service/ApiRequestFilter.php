@@ -52,7 +52,7 @@ class ApiRequestFilter
             throw new ApiRequestBadMethodException($apiRequestParameter);
         }
 
-        $default = str_replace('%', '', $apiRequestParameter->default);
+        $default = (null === $apiRequestParameter->default) ? null : str_replace('%', '', $apiRequestParameter->default);
         if (null !== $default && $this->parameters->hasParameter($default)) {
             $default = '#^('.$this->parameters->get($default).')$#';
         }
