@@ -65,6 +65,8 @@ class ApiRequestSubscriber implements EventSubscriberInterface
      */
     public function onKernelController(FilterControllerEvent $event)
     {
+        $this->apiRequestParameterBag->clear();
+
         $request = $event->getRequest();
         $controller = $event->getController();
 
@@ -86,7 +88,9 @@ class ApiRequestSubscriber implements EventSubscriberInterface
             }
 
             $value = $this->apiRequestFilter->filter($request, $annotation);
-            $this->apiRequestParameterBag->add($annotation, $value);
+            if (null !== $value) {
+                $this->apiRequestParameterBag->add($annotation, $value);
+            }
         }
     }
 }
