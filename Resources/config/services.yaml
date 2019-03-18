@@ -1,0 +1,47 @@
+services:
+  # settings for autoware types
+  _instanceof:
+    ApiRequestParameterBundle\Type\ApiRequestTypeInterface:
+      tags: [!php/const ApiRequestParameterBundle\DependencyInjection\CompilerPass\ApiRequestTypeCollectorCompilerPass::TYPE_SERVICE_TAG]
+
+  #> bundle services
+  ApiRequestParameterBundle\Service\ApiRequestTypeCollector: ~
+
+  ApiRequestParameterBundle\Service\Parameters:
+    arguments: ['@Symfony\Component\DependencyInjection\ContainerInterface']
+
+  ApiRequestParameterBundle\Service\ApiRequestParameterBag: ~
+
+  ApiRequestParameterBundle\Service\ApiRequestFilter:
+    arguments:
+      - '@ApiRequestParameterBundle\Service\Parameters'
+      - '@ApiRequestParameterBundle\Service\ApiRequestTypeCollector'
+  #< bundle services
+
+  #> bundle subscribers
+  ApiRequestParameterBundle\Subscriber\ApiRequestSubscriber:
+    arguments:
+      - '@annotations.reader'
+      - '@ApiRequestParameterBundle\Service\ApiRequestFilter'
+      - '@ApiRequestParameterBundle\Service\ApiRequestParameterBag'
+    tags:
+      - {name: kernel.event_subscriber}
+
+  ApiRequestParameterBundle\Subscriber\ApiRequestExceptionSubscriber:
+    arguments:
+      - '@annotations.reader'
+      - '%kernel.environment%'
+    tags:
+      - {name: kernel.event_subscriber}
+  #< bundle subscribers
+
+  #> bundle types
+  ApiRequestParameterBundle\Type\IntegerType:  ~
+  ApiRequestParameterBundle\Type\BooleanType:  ~
+  ApiRequestParameterBundle\Type\StringType:   ~
+  ApiRequestParameterBundle\Type\FloatType:    ~
+  ApiRequestParameterBundle\Type\DateTimeType: ~
+  ApiRequestParameterBundle\Type\DateType:     ~
+  ApiRequestParameterBundle\Type\ArrayType:
+    arguments: ['@ApiRequestParameterBundle\Service\ApiRequestTypeCollector']
+  #< bundle types
