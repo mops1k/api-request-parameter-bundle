@@ -34,6 +34,6 @@ class IntegerType implements ApiRequestTypeInterface
      */
     public function getNames(): array
     {
-        return ['int', 'integer', 'number'];
+        return ['int', 'integer'];
     }
 }
