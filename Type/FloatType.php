@@ -33,6 +33,6 @@ class FloatType implements ApiRequestTypeInterface
      */
     public function getNames(): array
     {
-        return ['float', 'double'];
+        return ['float', 'double', 'number'];
     }
 }
